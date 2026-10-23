@@ -1,0 +1,385 @@
+export type KeySoundSegment = [number, number];
+
+export type KeySoundStatus = "idle" | "loading" | "ready" | "unavailable";
+
+const SOUND_URL = "/sounds/sound.ogg";
+
+/**
+ * Generic press/release slices of the shared sample, used when a key has no
+ * dedicated segment defined below.
+ */
+export const GENERIC_DOWN: KeySoundSegment = [22869, 109];
+export const GENERIC_UP: KeySoundSegment = [22978, 89];
+
+/**
+ * Shared sample player. One AudioContext + one decoded buffer for the whole
+ * app, created lazily on the first press so autoplay policies are respected.
+ * Every failure path degrades to silence without breaking interaction.
+ */
+class KeySoundEngine {
+  private context: AudioContext | null = null;
+  private rawPromise: Promise<ArrayBuffer | null> | null = null;
+  private bufferPromise: Promise<AudioBuffer | null> | null = null;
+  private buffer: AudioBuffer | null = null;
+  private volume = 0.6;
+  private enabled = true;
+  private status: KeySoundStatus = "idle";
+  private statusListeners = new Set<(status: KeySoundStatus) => void>();
+
+  getStatus(): KeySoundStatus {
+    return this.status;
+  }
+
+  subscribeStatus(listener: (status: KeySoundStatus) => void): () => void {
+    this.statusListeners.add(listener);
+    return () => {
+      this.statusListeners.delete(listener);
+    };
+  }
+
+  setEnabled(enabled: boolean): void {
+    this.enabled = enabled;
+  }
+
+  setVolume(volume: number): void {
+    this.volume = Math.min(1, Math.max(0, volume));
+  }
+
+  /** Warm the sample fetch/decode ahead of the first keystroke. */
+  prime(): void {
+    if (typeof window === "undefined") {
+      return;
+    }
+    void this.getBuffer();
+  }
+
+  play(segment?: KeySoundSegment): void {
+    if (!this.enabled || typeof window === "undefined") {
+      return;
+    }
+
+    try {
+      const context = this.ensureContext();
+      if (!context) {
+        return;
+      }
+
+      const [startMs, durationMs] = segment ?? GENERIC_DOWN;
+
+      void this.getBuffer()
+        .then((buffer) => {
+          if (!buffer || !this.enabled || context.state === "closed") {
+            return;
+          }
+
+          const source = context.createBufferSource();
+          source.buffer = buffer;
+
+          const gain = context.createGain();
+          gain.gain.value = this.volume;
+
+          source.connect(gain);
+          gain.connect(context.destination);
+          source.start(0, startMs / 1000, durationMs / 1000);
+        })
+        .catch(() => {
+          // Sound stays optional; the keyboard keeps working.
+        });
+    } catch {
+      // Never let audio problems interrupt key handling.
+    }
+  }
+
+  private setStatus(status: KeySoundStatus): void {
+    if (this.status === status) {
+      return;
+    }
+    this.status = status;
+    for (const listener of this.statusListeners) {
+      listener(status);
+    }
+  }
+
+  private ensureContext(): AudioContext | null {
+    if (this.context) {
+      if (this.context.state === "suspended") {
+        void this.context.resume().catch(() => {});
+      }
+      return this.context;
+    }
+
+    const legacyWindow = window as Window & {
+      webkitAudioContext?: typeof AudioContext;
+    };
+    const AudioContextCtor = window.AudioContext ?? legacyWindow.webkitAudioContext;
+    if (!AudioContextCtor) {
+      this.setStatus("unavailable");
+      return null;
+    }
+
+    try {
+      this.context = new AudioContextCtor();
+    } catch {
+      this.setStatus("unavailable");
+      return null;
+    }
+
+    if (this.context.state === "suspended") {
+      void this.context.resume().catch(() => {});
+    }
+    return this.context;
+  }
+
+  private getRaw(): Promise<ArrayBuffer | null> {
+    if (!this.rawPromise) {
+      this.setStatus("loading");
+      this.rawPromise = fetch(SOUND_URL)
+        .then((response) => (response.ok ? response.arrayBuffer() : null))
+        .then((raw) => {
+          if (!raw) {
+            this.rawPromise = null;
+            this.setStatus("unavailable");
+          }
+          return raw;
+        })
+        .catch(() => {
+          this.rawPromise = null;
+          this.setStatus("unavailable");
+          return null;
+        });
+    }
+    return this.rawPromise;
+  }
+
+  private getBuffer(): Promise<AudioBuffer | null> {
+    if (this.buffer) {
+      return Promise.resolve(this.buffer);
+    }
+
+    if (!this.bufferPromise) {
+      this.bufferPromise = (async () => {
+        const raw = await this.getRaw();
+        if (!raw) {
+          this.bufferPromise = null;
+          return null;
+        }
+
+        const buffer = await this.decode(raw);
+        if (!buffer) {
+          this.bufferPromise = null;
+          this.setStatus("unavailable");
+          return null;
+        }
+
+        this.buffer = buffer;
+        this.setStatus("ready");
+        return buffer;
+      })();
+    }
+
+    return this.bufferPromise;
+  }
+
+  private async decode(raw: ArrayBuffer): Promise<AudioBuffer | null> {
+    // Copy per attempt: decodeAudioData detaches its input buffer.
+    if (this.context) {
+      try {
+        return await this.context.decodeAudioData(raw.slice(0));
+      } catch {
+        // Fall through to the offline path below.
+      }
+    }
+
+    try {
+      const legacyWindow = window as Window & {
+        webkitOfflineAudioContext?: typeof OfflineAudioContext;
+      };
+      const OfflineCtor =
+        window.OfflineAudioContext ?? legacyWindow.webkitOfflineAudioContext;
+      if (!OfflineCtor) {
+        return null;
+      }
+      const offlineContext = new OfflineCtor(1, 1, 44100);
+      return await offlineContext.decodeAudioData(raw.slice(0));
+    } catch {
+      return null;
+    }
+  }
+}
+
+export const keySound = new KeySoundEngine();
+export const SOUND_DEFINES_DOWN: Record<string, [number, number]> = {
+  Escape: [9069, 115],
+  F1: [2754, 104],
+  F2: [3155, 99],
+  F3: [3545, 103],
+  F4: [3913, 100],
+  F5: [4305, 96],
+  F6: [4666, 103],
+  F7: [5034, 110],
+  F8: [5433, 103],
+  F9: [7795, 109],
+  F10: [6146, 105],
+  F11: [7322, 97],
+  F12: [7699, 98],
+  F13: [2754, 104],
+  Delete: [14199, 100],
+  F14: [3155, 99],
+  Backquote: [9069, 115],
+  Digit1: [2280, 109],
+  Digit2: [9444, 102],
+  Digit3: [9833, 103],
+  Digit4: [10185, 107],
+  Digit5: [10551, 108],
+  Digit6: [10899, 107],
+  Digit7: [11282, 99],
+  Digit8: [11623, 103],
+  Digit9: [11976, 110],
+  Digit0: [12337, 108],
+  Minus: [12667, 107],
+  Equal: [13058, 105],
+  Backspace: [13765, 101],
+  PageUp: [14522, 108],
+  Tab: [15916, 97],
+  KeyQ: [16284, 83],
+  KeyW: [16637, 97],
+  KeyE: [16964, 105],
+  KeyR: [17275, 102],
+  KeyT: [17613, 108],
+  KeyY: [17957, 95],
+  KeyU: [18301, 105],
+  KeyI: [18643, 110],
+  KeyO: [18994, 98],
+  KeyP: [19331, 108],
+  BracketLeft: [19671, 94],
+  BracketRight: [20020, 96],
+  Backslash: [20387, 97],
+  PageDown: [14852, 93],
+  CapsLock: [22560, 100],
+  KeyA: [22869, 109],
+  KeyS: [23237, 98],
+  KeyD: [23586, 103],
+  KeyF: [23898, 98],
+  KeyG: [24237, 102],
+  KeyH: [24550, 106],
+  KeyJ: [24917, 103],
+  KeyK: [25274, 102],
+  KeyL: [25625, 101],
+  Semicolon: [25989, 100],
+  Quote: [26335, 99],
+  Enter: [26703, 100],
+  Home: [20766, 102],
+  ShiftLeft: [28109, 99],
+  KeyZ: [28550, 92],
+  KeyX: [28855, 101],
+  KeyC: [29557, 112],
+  KeyV: [29557, 112],
+  KeyB: [29909, 98],
+  KeyN: [30252, 112],
+  KeyM: [30605, 101],
+  Comma: [30965, 117],
+  Period: [31315, 97],
+  Slash: [31659, 96],
+  ShiftRight: [28109, 99],
+  ArrowUp: [32429, 96],
+  End: [21409, 83],
+  ControlLeft: [8036, 92],
+  AltLeft: [34551, 96],
+  MetaLeft: [34551, 96],
+  Space: [33857, 100],
+  MetaRight: [34181, 97],
+  Fn: [8036, 92],
+  ControlRight: [8036, 92],
+  ArrowLeft: [36907, 90],
+  ArrowDown: [37267, 94],
+  ArrowRight: [37586, 88],
+  AltRight: [35878, 90],
+};
+
+export const SOUND_DEFINES_UP: Record<string, [number, number]> = {
+  Escape: [9069 + 115, 94],
+  F1: [2754 + 104, 85],
+  F2: [3155 + 99, 81],
+  F3: [3545 + 103, 84],
+  F4: [3913 + 100, 83],
+  F5: [4305 + 96, 78],
+  F6: [4666 + 103, 84],
+  F7: [5034 + 110, 90],
+  F8: [5433 + 103, 84],
+  F9: [7795 + 109, 89],
+  F10: [6146 + 105, 86],
+  F11: [7322 + 97, 80],
+  F12: [7699 + 98, 80],
+  F13: [2754 + 104, 85],
+  Delete: [14199 + 100, 81],
+  F14: [3155 + 99, 81],
+  Backquote: [9069 + 115, 94],
+  Digit1: [2280 + 109, 90],
+  Digit2: [9444 + 102, 83],
+  Digit3: [9833 + 103, 84],
+  Digit4: [10185 + 107, 87],
+  Digit5: [10551 + 108, 88],
+  Digit6: [10899 + 107, 87],
+  Digit7: [11282 + 99, 81],
+  Digit8: [11623 + 103, 85],
+  Digit9: [11976 + 110, 90],
+  Digit0: [12337 + 108, 89],
+  Minus: [12667 + 107, 87],
+  Equal: [13058 + 105, 86],
+  Backspace: [13765 + 101, 83],
+  PageUp: [14522 + 108, 88],
+  Tab: [15916 + 97, 79],
+  KeyQ: [16284 + 83, 67],
+  KeyW: [16637 + 97, 79],
+  KeyE: [16964 + 105, 85],
+  KeyR: [17275 + 102, 83],
+  KeyT: [17613 + 108, 88],
+  KeyY: [17957 + 95, 78],
+  KeyU: [18301 + 105, 85],
+  KeyI: [18643 + 110, 90],
+  KeyO: [18994 + 98, 80],
+  KeyP: [19331 + 108, 89],
+  BracketLeft: [19671 + 94, 77],
+  BracketRight: [20020 + 96, 79],
+  Backslash: [20387 + 97, 79],
+  PageDown: [14852 + 93, 76],
+  CapsLock: [22560 + 100, 81],
+  KeyA: [22869 + 109, 89],
+  KeyS: [23237 + 98, 80],
+  KeyD: [23586 + 103, 84],
+  KeyF: [23898 + 98, 81],
+  KeyG: [24237 + 102, 83],
+  KeyH: [24550 + 106, 86],
+  KeyJ: [24917 + 103, 85],
+  KeyK: [25274 + 102, 83],
+  KeyL: [25625 + 101, 82],
+  Semicolon: [25989 + 100, 82],
+  Quote: [26335 + 99, 81],
+  Enter: [26703 + 100, 81],
+  Home: [20766 + 102, 83],
+  ShiftLeft: [28109 + 99, 81],
+  KeyZ: [28550 + 92, 75],
+  KeyX: [28855 + 101, 83],
+  KeyC: [29557 + 112, 92],
+  KeyV: [29557 + 112, 92],
+  KeyB: [29909 + 98, 81],
+  KeyN: [30252 + 112, 91],
+  KeyM: [30605 + 101, 83],
+  Comma: [30965 + 117, 95],
+  Period: [31315 + 97, 79],
+  Slash: [31659 + 96, 79],
+  ShiftRight: [28109 + 99, 81],
+  ArrowUp: [32429 + 96, 78],
+  End: [21409 + 83, 68],
+  ControlLeft: [8036 + 92, 76],
+  AltLeft: [34551 + 96, 79],
+  MetaLeft: [34551 + 96, 79],
+  Space: [33857 + 100, 82],
+  MetaRight: [34181 + 97, 80],
+  Fn: [8036 + 92, 76],
+  ControlRight: [8036 + 92, 76],
+  ArrowLeft: [36907 + 90, 73],
+  ArrowDown: [37267 + 94, 76],
+  ArrowRight: [37586 + 88, 72],
+  AltRight: [35878 + 90, 74],
+};
