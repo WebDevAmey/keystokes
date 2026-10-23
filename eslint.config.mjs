@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Vendored third-party keyboard simulator (has its own lint config):
+    "keysim/**",
   ]),
 ]);
 
