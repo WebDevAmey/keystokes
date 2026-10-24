@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Keywave Studio — Interactive Keyboard Sound Playground",
+  title: "Keywave Studio — Type Test & Sound Studio",
   description:
-    "Switch between MacBook and Keychron keyboards, press keys, and shape the sound of every keystroke.",
+    "Race the clock in a minimalist typing test or map notes and sounds to your keyboard in the studio.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
