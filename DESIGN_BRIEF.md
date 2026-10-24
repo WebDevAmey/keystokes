@@ -11,30 +11,48 @@
   keyboard and play real samples. A WPM/accuracy score after a test.
 - **Personality (3):** tactile, quiet, playfully precise.
   **Not (3):** corporate, gradient-slick, hype-driven.
-- **References:** monkeytype (the typing text *is* the interface; no chrome around it),
-  Keychron/keyboard product photography (keycaps have real material and shadow logic),
-  Teenage-Engineering hardware labels (small mono labels, utility with a wink).
+- **References:** Griffin (vibrant.design) for hero composition and restraint — left-aligned
+  editorial serif headline, compact uppercase nav, filled + outline pill pair, right-aligned
+  technical microcopy, full-width glyph band as the transition into the product.
+  monkeytype (the typing text *is* the interface), Keychron product photography (keycap
+  material logic), Teenage-Engineering hardware labels (small mono annotations).
 
 ## Design system (tokens in use)
 
-- **Colour:** background near-black `#09090b`; typing-test plum `#140f18` (chosen so the
-  test screen feels like a different room). Surfaces = white at 2.5–3% alpha; hairlines =
-  white at 7–8%. One accent: violet `#7c3aed` / `violet-300` (selection, focus, brand).
-  Semantic only: red = typing errors, emerald = audio ready, amber = audio degraded.
-  Text floor: `zinc-400` on dark backgrounds (AA for body text; `zinc-300/white` for
-  emphasis). Hierarchy comes from size and weight, not sub-AA greys.
-- **Type:** Geist Sans for tool chrome (dense, neutral, ships self-hosted with the app,
-  so it is a deliberate keep from the scaffold, not a habit choice). Geist Mono for the
-  typing passage and all numbers (WPM, timer, volume %) because this product is literally
-  about keys and characters; mono is the subject matter, not decoration.
-- **Shape:** radius by role — panels `2xl`, inputs/buttons `xl`, chips/switches `pill`,
-  keycaps clamped tiny (they follow physical key geometry, not UI fashion).
-- **Elevation:** borders and tone first. Shadows exist only on keycaps (material realism:
-  a cap lifts when pressed) and under the active pill.
-- **Icons:** lucide, sparse: two wayfinding marks on the landing gateways, control
-  affordances (volume, restart, remove) only. No emoji, no sparkle AI-signalling.
-- **Motion:** state feedback only — keycap press (75–100ms), caret pulse on the current
-  character, segment/knob slide on selection. No hover lifts, no entrance choreography.
+- **Colour — warm monochrome** (Griffin-derived, verified for AA on `#0a0a09`):
+  canvas `--kw-bg #0a0a09`, surface `--kw-surface #141412`, text `--kw-text #f1ede3`,
+  muted `--kw-muted #b7b3a9`, subtle `--kw-subtle #8a877f` (≈5.8:1, AA), hairline
+  `--kw-border #26262a`. No bright brand accent: hierarchy comes from fill vs outline
+  (off-white pill = primary). Semantic only: red = typing errors, emerald = audio ready,
+  amber = audio degraded/loading. The old violet accent and the plum test room were
+  removed in the redesign for palette consistency.
+- **Type:** Instrument Serif for display headlines (editorial voice, clamp-scaled,
+  tight tracking); Geist Sans for interface; Geist Mono for technical microcopy, eyebrows,
+  stat numbers, and the typing passage (the product is about characters — mono is the
+  subject matter).
+- **Shape:** radius by role — pills for actions, `xl` panels, chips `full`, keycaps follow
+  physical key geometry, not UI fashion.
+- **Elevation:** borders and tone first. Shadows exist only on keycaps (material realism)
+  and mapped-sound badges get a hairline ring instead of a glow.
+- **Motion:** state feedback only — keycap press, caret pulse, segment/knob slide, plus the
+  canvas glyph band (own rAF loop, paused when hidden/off-screen, static under
+  `prefers-reduced-motion`). No hover lifts, no entrance choreography.
+
+## Component library research (recorded)
+
+- **Space UI (spaceui.one):** accessible; shadcn registry `@spaceui/essentials`, Base UI +
+  Tailwind, MIT. Offerings are mostly decorative (orbs, reels, animoji). Nothing adopted.
+- **Kobra (kobra.systems):** accessible; `Kbd` is listed free but its source is Pro-gated
+  behind a blur/paywall ($19), so we keep our own trivial key-hint styling. Its `Sound`
+  component ships full source but depends on `@web-kits/audio` and would duplicate
+  Keywave's own engine — inspected, not adopted.
+- **Board UI (board.ui):** unreachable (connection failed via fetch and curl).
+  Limitation recorded; no components could be verified.
+- **UIarc / Arc UI (uiarc.dev):** accessible; shadcn registry, 185 components, many Pro
+  ($249). Borrowed only the idea of restrained in-view headline treatment; no package added.
+- **Decision:** zero new dependencies. The landing, controls, segmented pills, and glyph
+  band are built directly in Keywave's token system; the existing sound engine and
+  keyboard components stay the source of truth.
 
 ## Decisions recorded against the vibe-codead tells
 
@@ -42,9 +60,9 @@
   shading inside the keyboard component (product realism).
 - No glassmorphism, orbs, dot grids, bento, checkmark lists, terminal mockups, fake
   testimonials, pricing, or logos.
-- Two-card landing row is kept: there really are exactly two destinations, and the
-  navigation itself sits in the header pill.
-- Landing shows the live keyboard in the first scroll: the product is the hero.
+- The landing tells one story: hero → glyph band → live keyboard (01) → sound controls
+  (02) → colourways/per-key map (02/03) → engineering notes (04) → closing action.
+  The product is reachable in one scroll; no decorative-only sections.
 - Em dashes are avoided in user-facing copy; copy states what the thing does.
 - Trust layer: `/terms` and `/privacy` describe the actual behavior (localStorage only,
   no accounts, no servers, no cookies) and are linked in every footer. They need a
