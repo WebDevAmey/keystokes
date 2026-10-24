@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { usePhysicalKeys, shouldBlockPageScroll } from "@/hooks/use-physical-keys";
 import {
@@ -165,6 +165,7 @@ interface CapButtonProps {
   compact?: boolean;
   className?: string;
   style?: CSSProperties;
+  marker?: string | null;
   children: ReactNode;
 }
 
@@ -177,6 +178,7 @@ function CapButton({
   compact,
   className,
   style,
+  marker,
   children,
 }: CapButtonProps) {
   const isPressed = pressed.has(code);
@@ -226,6 +228,14 @@ function CapButton({
       style={style}
     >
       {children}
+      {marker && (
+        <span
+          aria-hidden
+          className="absolute bottom-[2px] left-1/2 -translate-x-1/2 rounded-full bg-violet-500/90 px-1 text-[clamp(6px,0.6vw,8px)] font-semibold leading-[1.4] text-white shadow"
+        >
+          {marker}
+        </span>
+      )}
     </button>
   );
 }
@@ -260,22 +270,43 @@ function KeyLabel({ alt, glyph, label }: { alt?: string; glyph?: string; label?:
 // Keyboard
 // -----------------------------------------------------------------------------
 
+export interface MacKeyEvent {
+  code: string;
+  phase: "down" | "up";
+  source: "physical" | "pointer";
+}
+
 export interface MacKeyboardProps {
   className?: string;
   enableSound?: boolean;
   onKeyPress?: (code: string) => void;
+  onKeyEvent?: (event: MacKeyEvent) => void;
+  /** KeyboardEvent.code → short badge label (e.g. sound assignment). */
+  markers?: Record<string, string>;
 }
 
 export default function MacKeyboard({
   className,
   enableSound = true,
   onKeyPress,
+  onKeyEvent,
+  markers,
 }: MacKeyboardProps) {
   const [pressed, setPressed] = useState<ReadonlySet<string>>(() => new Set());
   const pressedRef = useRef<Set<string>>(new Set());
+  const onKeyEventRef = useRef(onKeyEvent);
+  const markersRef = useRef(markers);
+
+  useEffect(() => {
+    onKeyEventRef.current = onKeyEvent;
+  }, [onKeyEvent]);
+
+  useEffect(() => {
+    markersRef.current = markers;
+  }, [markers]);
 
   const press = useCallback(
-    (code: string) => {
+    (code: string, source: "pointer" | "physical" = "pointer") => {
       if (pressedRef.current.has(code)) {
         return;
       }
@@ -286,12 +317,13 @@ export default function MacKeyboard({
         keySound.play(SOUND_DEFINES_DOWN[code] ?? GENERIC_DOWN);
       }
       onKeyPress?.(code);
+      onKeyEventRef.current?.({ code, phase: "down", source });
     },
     [enableSound, onKeyPress],
   );
 
   const release = useCallback(
-    (code: string) => {
+    (code: string, source: "pointer" | "physical" = "pointer") => {
       if (!pressedRef.current.has(code)) {
         return;
       }
@@ -301,6 +333,7 @@ export default function MacKeyboard({
       if (enableSound) {
         keySound.play(SOUND_DEFINES_UP[code] ?? GENERIC_UP);
       }
+      onKeyEventRef.current?.({ code, phase: "up", source });
     },
     [enableSound],
   );
@@ -318,9 +351,9 @@ export default function MacKeyboard({
       if (shouldBlockPageScroll(code)) {
         event.preventDefault();
       }
-      press(code);
+      press(code, "physical");
     },
-    onUp: release,
+    onUp: (code) => release(code, "physical"),
     onClear: clearPressed,
   });
 
@@ -342,8 +375,9 @@ export default function MacKeyboard({
             code={top.code}
             aria={top.aria}
             pressed={pressed}
-            onPress={press}
-            onRelease={release}
+            onPress={(code) => press(code, "pointer")}
+            onRelease={(code) => release(code, "pointer")}
+            marker={markers?.[top.code] ?? null}
             compact
             className="h-full"
           >
@@ -353,8 +387,9 @@ export default function MacKeyboard({
             code={bottom.code}
             aria={bottom.aria}
             pressed={pressed}
-            onPress={press}
-            onRelease={release}
+            onPress={(code) => press(code, "pointer")}
+            onRelease={(code) => release(code, "pointer")}
+            marker={markers?.[bottom.code] ?? null}
             compact
             className="h-full"
           >
@@ -372,8 +407,9 @@ export default function MacKeyboard({
         code={key.code}
         aria={key.aria}
         pressed={pressed}
-        onPress={press}
-        onRelease={release}
+        onPress={(code) => press(code, "pointer")}
+        onRelease={(code) => release(code, "pointer")}
+        marker={markers?.[key.code] ?? null}
         compact={key.small || functionRow}
         style={{ ...widthStyle, height: "100%" }}
       >

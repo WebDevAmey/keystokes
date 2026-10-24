@@ -12,8 +12,10 @@ export interface PhysicalKeyHandlers {
   enabled?: boolean;
 }
 
+// The typing test's hidden input is deliberately NOT excluded — it carries
+// data-typing-input so keyboards keep mirroring keys while the test listens.
 const EDITABLE_SELECTOR =
-  "input, textarea, select, [contenteditable]:not([contenteditable='false'])";
+  "input:not([data-typing-input]), textarea, select, [contenteditable]:not([contenteditable='false'])";
 
 const CONTROL_SELECTOR =
   "a[href], button:not([data-keyboard-key]), [role='button']:not([data-keyboard-key]), [role='switch'], [role='tab'], [role='slider'], [role='menuitem'], [role='radio']";

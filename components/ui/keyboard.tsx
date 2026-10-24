@@ -59,6 +59,8 @@ export interface KeyboardProps {
   theme?: KeyboardThemeName;
   enableHaptics?: boolean;
   enableSound?: boolean;
+  /** KeyboardEvent.code → short badge label (e.g. sound assignment). */
+  markers?: Record<string, string>;
   onKeyEvent?: (event: KeyboardInteractionEvent) => void;
 }
 
@@ -67,6 +69,7 @@ export function Keyboard({
   theme = "classic",
   enableSound = true,
   enableHaptics = true,
+  markers = {},
   onKeyEvent,
 }: KeyboardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -77,6 +80,7 @@ export function Keyboard({
       theme={theme}
       enableSound={enableSound}
       enableHaptics={enableHaptics}
+      markers={markers}
       onKeyEvent={onKeyEvent}
     >
       <div ref={containerRef} className={cn("inline-block", className)}>
@@ -96,6 +100,7 @@ interface KeyboardContextType {
   themeName: KeyboardThemeName;
   pressedKeys: Set<string>;
   lastPressedKey: string | null;
+  markers: Record<string, string>;
   triggerPointerHaptic: () => void;
   pressKey: (keyCode: string, source: KeyboardEventSource) => void;
   releaseKey: (keyCode: string, source: KeyboardEventSource) => void;
@@ -118,6 +123,7 @@ interface KeyboardProviderProps {
   theme: KeyboardThemeName;
   enableSound: boolean;
   enableHaptics: boolean;
+  markers: Record<string, string>;
   onKeyEvent?: (event: KeyboardInteractionEvent) => void;
 }
 
@@ -127,6 +133,7 @@ function KeyboardProvider({
   theme,
   enableSound,
   enableHaptics,
+  markers,
   onKeyEvent,
 }: KeyboardProviderProps) {
   const pressedKeysRef = useRef<Set<string>>(new Set());
@@ -267,6 +274,7 @@ function KeyboardProvider({
         themeName: theme,
         pressedKeys,
         lastPressedKey,
+        markers,
         triggerPointerHaptic,
         pressKey,
         releaseKey,
@@ -630,8 +638,10 @@ function Key({
   className,
   keyCode,
 }: KeyProps) {
-  const { themeName, pressedKeys, pressKey, releaseKey, triggerPointerHaptic } = useKeyboardContext();
+  const { themeName, pressedKeys, markers, pressKey, releaseKey, triggerPointerHaptic } =
+    useKeyboardContext();
   const isPressed = keyCode ? pressedKeys.has(keyCode) : false;
+  const marker = keyCode ? markers[keyCode] : undefined;
   const keyVariantSlot = resolveKeyVariant(themeName, keyCode);
   const keyVariant = KEYBOARD_THEMES[themeName].variants[keyVariantSlot];
 
@@ -695,6 +705,15 @@ function Key({
         >
           {children}
         </div>
+
+        {marker && (
+          <span
+            aria-hidden
+            className="absolute bottom-[3px] left-1/2 z-20 -translate-x-1/2 rounded-full bg-violet-500/90 px-1 text-[7px] font-semibold leading-[12px] text-white shadow"
+          >
+            {marker}
+          </span>
+        )}
 
         <div
           className={cn(
