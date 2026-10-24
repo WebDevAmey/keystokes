@@ -28,7 +28,7 @@ export default function SiteHeader({ right }: { right?: React.ReactNode }) {
           </div>
           <div>
             <span className="text-sm font-semibold tracking-tight">keywave</span>
-            <span className="ml-2 text-[10px] uppercase tracking-[0.2em] text-zinc-600">
+            <span className="ml-2 text-[10px] uppercase tracking-[0.2em] text-zinc-400">
               studio
             </span>
           </div>

@@ -28,7 +28,7 @@ export function SoundToggle({ className }: { className?: string }) {
         {soundEnabled ? (
           <Volume2 className="h-3.5 w-3.5 text-violet-300" />
         ) : (
-          <VolumeX className="h-3.5 w-3.5 text-zinc-500" />
+          <VolumeX className="h-3.5 w-3.5 text-zinc-400" />
         )}
         Sound
       </span>
@@ -58,7 +58,7 @@ export function VolumeSlider({ className }: { className?: string }) {
     <label htmlFor="keywave-volume" className={cn("block", className)}>
       <span className="flex items-center justify-between text-xs">
         <span className="text-zinc-300">Volume</span>
-        <span className="tabular-nums text-zinc-500">{volumePercent}%</span>
+        <span className="tabular-nums text-zinc-400">{volumePercent}%</span>
       </span>
       <input
         id="keywave-volume"
