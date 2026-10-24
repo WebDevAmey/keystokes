@@ -6,7 +6,7 @@ import { setStyle, useStudio, type KeyboardStyle } from "@/lib/studio-store";
 const OPTIONS: { id: KeyboardStyle; label: string }[] = [
   { id: "mac", label: "MacBook" },
   { id: "keychron", label: "Keychron" },
-  { id: "3d", label: "3D" },
+  { id: "registry", label: "mac-keyboard" },
 ];
 
 interface StyleSegmentedProps {
