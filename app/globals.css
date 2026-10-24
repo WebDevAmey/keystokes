@@ -7,29 +7,37 @@
 
 :root {
   color-scheme: dark;
-  background: #09090b;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+
+  /* Keywave design tokens: warm monochrome, near-black canvas. */
+  --kw-bg: #0a0a09;
+  --kw-surface: #141412;
+  --kw-text: #f1ede3;
+  --kw-muted: #b7b3a9;
+  --kw-subtle: #8a877f;
+  --kw-border: #26262a;
+
+  --background: var(--kw-bg);
+  --foreground: var(--kw-text);
+  --card: var(--kw-surface);
+  --card-foreground: var(--kw-text);
+  --popover: var(--kw-surface);
+  --popover-foreground: var(--kw-text);
+  --primary: var(--kw-text);
+  --primary-foreground: var(--kw-bg);
+  --secondary: var(--kw-surface);
+  --secondary-foreground: var(--kw-muted);
+  --muted: var(--kw-surface);
+  --muted-foreground: var(--kw-muted);
+  --accent: var(--kw-surface);
+  --accent-foreground: var(--kw-text);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: var(--kw-border);
+  --input: var(--kw-border);
+  --ring: var(--kw-muted);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -52,13 +60,14 @@
 
 html {
   min-height: 100%;
-  background: #09090b;
+  background: var(--kw-bg);
+  scroll-behavior: smooth;
 }
 
 body {
   min-height: 100vh;
   margin: 0;
-  background: #09090b;
+  background: var(--kw-bg);
 }
 
 button {
@@ -66,13 +75,21 @@ button {
 }
 
 ::selection {
-  color: white;
-  background: #6d5ce8;
+  color: var(--kw-bg);
+  background: var(--kw-text);
 }
 
 @theme inline {
-  --font-heading: var(--font-sans);
-  --font-sans: var(--font-sans);
+  --font-heading: var(--font-kw-display);
+  --font-display: var(--font-kw-display);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-kw-bg: var(--kw-bg);
+  --color-kw-surface: var(--kw-surface);
+  --color-kw-text: var(--kw-text);
+  --color-kw-muted: var(--kw-muted);
+  --color-kw-subtle: var(--kw-subtle);
+  --color-kw-border: var(--kw-border);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -114,37 +131,16 @@ button {
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  /* Background/foreground already warm in :root; keep only extras here. */
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar: var(--kw-surface);
+  --sidebar-foreground: var(--kw-text);
+  --sidebar-primary: var(--kw-text);
+  --sidebar-primary-foreground: var(--kw-bg);
+  --sidebar-accent: var(--kw-surface);
+  --sidebar-accent-foreground: var(--kw-text);
+  --sidebar-border: var(--kw-border);
+  --sidebar-ring: var(--kw-muted);
 }
 
 @layer base {
@@ -156,5 +152,31 @@ button {
   }
   html {
     @apply font-sans;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  .kw-btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-medium tracking-[-0.01em] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kw-text;
+  }
+  .kw-btn-primary {
+    @apply bg-kw-text text-kw-bg hover:bg-[#e3ded1] active:translate-y-px;
+  }
+  .kw-btn-secondary {
+    @apply border border-kw-border bg-transparent text-kw-muted hover:border-white/30 hover:text-kw-text active:translate-y-px;
+  }
+  .kw-eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.22em] text-kw-subtle;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
