@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Keywave Studio — Type Test & Sound Studio",
+  title: "Keywave Studio · Type Test & Sound Studio",
   description:
     "Race the clock in a minimalist typing test or map notes and sounds to your keyboard in the studio.",
 };
