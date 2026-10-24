@@ -25,7 +25,7 @@ export default function StyleSegmented({
       role="group"
       aria-label={label}
       className={cn(
-        "inline-flex flex-wrap items-center gap-1 rounded-full border border-white/[0.08] bg-black/30 p-1",
+        "inline-flex flex-wrap items-center gap-1 rounded-full border border-kw-border bg-kw-surface/60 p-1",
         className,
       )}
     >
@@ -38,10 +38,10 @@ export default function StyleSegmented({
             aria-pressed={isActive}
             onClick={() => setStyle(option.id)}
             className={cn(
-              "rounded-full px-3 py-1.5 text-xs transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400",
+              "cursor-pointer rounded-full px-3 py-1.5 text-xs transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kw-text",
               isActive
-                ? "bg-violet-500 text-white shadow-[0_1px_6px_rgba(124,58,237,0.45)]"
-                : "text-zinc-400 hover:bg-white/5 hover:text-zinc-200",
+                ? "bg-kw-text text-kw-bg"
+                : "text-kw-subtle hover:text-kw-text",
             )}
           >
             {option.label}

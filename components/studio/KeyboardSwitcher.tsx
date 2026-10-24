@@ -61,8 +61,8 @@ export default function KeyboardSwitcher({
     <section className="min-w-0">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-sm font-medium text-white">{title}</p>
-          <p className="mt-1 text-xs text-zinc-400">
+          <p className="text-sm font-medium text-kw-text">{title}</p>
+          <p className="mt-1 text-xs text-kw-muted">
             Click any key or type on your physical keyboard. Browser shortcuts
             like ⌘R and ⌘W are never intercepted.
           </p>
@@ -71,7 +71,7 @@ export default function KeyboardSwitcher({
         <StyleSegmented />
       </div>
 
-      <div className="overflow-x-auto overscroll-x-contain rounded-2xl border border-white/[0.07] bg-gradient-to-b from-white/[0.03] to-transparent p-4 sm:p-6">
+      <div className="overflow-x-auto overscroll-x-contain rounded-xl border border-kw-border bg-kw-surface/40 p-4 sm:p-6">
         <div className="flex min-w-min justify-center">
           {style === "mac" && (
             <MacKeyboard
@@ -112,10 +112,10 @@ export default function KeyboardSwitcher({
         </div>
       </div>
 
-      <p className="mt-3 text-center text-[11px] text-zinc-400">
+      <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-kw-subtle">
         {playInternalSound
-          ? `Sound on · ${Math.round(volume * 100)}% volume · QWERTY`
-          : "Muted · QWERTY"}
+          ? `sound on · ${Math.round(volume * 100)}% volume · qwerty`
+          : "muted · qwerty"}
       </p>
     </section>
   );
