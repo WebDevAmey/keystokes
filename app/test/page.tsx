@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function TypeTestPage() {
   return (
-    <div className="min-h-screen bg-[#140f18]">
+    <div className="min-h-screen bg-kw-bg">
       <SiteHeader right={<AudioStatusPill />} />
       <TypingTest />
       <div className="mx-auto w-full max-w-6xl px-5 pb-8 sm:px-8">

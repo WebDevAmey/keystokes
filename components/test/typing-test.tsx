@@ -244,7 +244,7 @@ export default function TypingTest() {
         {/* Stats row — timer / wpm / accuracy */}
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-zinc-400">
+            <p className="text-xs uppercase tracking-[0.25em] text-kw-subtle">
               type test
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-1.5">
@@ -258,10 +258,10 @@ export default function TypingTest() {
                     reset(value);
                   }}
                   className={cn(
-                    "rounded-full px-3 py-1 text-xs transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400",
+                    "rounded-full px-3 py-1 text-xs transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kw-text",
                     duration === value
-                      ? "bg-violet-500 text-white"
-                      : "text-zinc-400 hover:bg-white/5 hover:text-zinc-300",
+                      ? "bg-kw-text text-kw-bg"
+                      : "text-kw-subtle hover:bg-white/5 hover:text-kw-text",
                   )}
                 >
                   {value}s
@@ -270,9 +270,9 @@ export default function TypingTest() {
             </div>
           </div>
 
-          <div className="flex items-center gap-6 font-[family-name:var(--font-geist-mono)] tabular-nums">
+          <div className="flex items-center gap-6 font-mono tabular-nums">
             <div className="text-right">
-              <p className="text-[10px] uppercase tracking-widest text-zinc-400">
+              <p className="text-[10px] uppercase tracking-widest text-kw-subtle">
                 time
               </p>
               <p
@@ -280,25 +280,25 @@ export default function TypingTest() {
                   "mt-1 text-2xl",
                   status === "running" && timeLeftSec <= 5
                     ? "text-red-400"
-                    : "text-zinc-200",
+                    : "text-kw-text",
                 )}
               >
                 {timeLeftSec}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] uppercase tracking-widest text-zinc-400">
+              <p className="text-[10px] uppercase tracking-widest text-kw-subtle">
                 wpm
               </p>
-              <p className="mt-1 text-2xl text-zinc-200">
+              <p className="mt-1 text-2xl text-kw-text">
                 {status === "done" ? results?.wpm ?? 0 : liveWpm}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] uppercase tracking-widest text-zinc-400">
+              <p className="text-[10px] uppercase tracking-widest text-kw-subtle">
                 acc
               </p>
-              <p className="mt-1 text-2xl text-zinc-200">
+              <p className="mt-1 text-2xl text-kw-text">
                 {status === "done" ? results?.accuracy ?? 100 : liveAccuracy}%
               </p>
             </div>
@@ -312,7 +312,7 @@ export default function TypingTest() {
         >
           <div
             ref={scrollContainerRef}
-            className="max-h-40 overflow-hidden font-[family-name:var(--font-geist-mono)] text-xl leading-[2.1] text-zinc-400 sm:text-2xl"
+            className="max-h-40 overflow-hidden font-mono text-xl leading-[2.1] text-kw-subtle sm:text-2xl"
             aria-label="Typing passage"
           >
             {words.map((word, wordIdx) => (
@@ -331,8 +331,8 @@ export default function TypingTest() {
                       ref={isCurrent ? currentCharRef : undefined}
                       className={cn(
                         "relative transition-colors duration-75",
-                        !isTyped && "text-zinc-400",
-                        isCorrect && "text-zinc-100",
+                        !isTyped && "text-kw-subtle",
+                        isCorrect && "text-kw-text",
                         isWrong && "rounded-[3px] bg-red-500/20 text-red-400",
                         isCurrent && "text-red-400",
                       )}
@@ -358,7 +358,7 @@ export default function TypingTest() {
                       key={`space-${wordIdx}`}
                       className={cn(
                         "relative inline-block w-[0.6ch] transition-colors",
-                        isTyped && isCorrect && "text-zinc-100",
+                        isTyped && isCorrect && "text-kw-text",
                         isTyped && !isCorrect && "bg-red-500/20 text-red-400",
                         isCurrent && "text-red-400",
                       )}
@@ -394,27 +394,27 @@ export default function TypingTest() {
 
         {/* Results */}
         {status === "done" && results && (
-          <div className="mt-8 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5">
+          <div className="mt-8 rounded-xl border border-kw-border bg-kw-surface/60 p-5">
             <div className="flex flex-wrap items-end justify-between gap-5">
-              <div className="flex items-end gap-8 font-[family-name:var(--font-geist-mono)] tabular-nums">
+              <div className="flex items-end gap-8 font-mono tabular-nums">
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest text-zinc-400">
+                  <p className="text-[10px] uppercase tracking-widest text-kw-subtle">
                     wpm
                   </p>
-                  <p className="mt-1 text-4xl font-semibold text-white">
+                  <p className="mt-1 text-4xl font-semibold text-kw-text">
                     {results.wpm}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest text-zinc-400">
+                  <p className="text-[10px] uppercase tracking-widest text-kw-subtle">
                     accuracy
                   </p>
-                  <p className="mt-1 text-4xl font-semibold text-white">
+                  <p className="mt-1 text-4xl font-semibold text-kw-text">
                     {results.accuracy}%
                   </p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest text-zinc-400">
+                  <p className="text-[10px] uppercase tracking-widest text-kw-subtle">
                     errors
                   </p>
                   <p className="mt-1 text-4xl font-semibold text-red-400">
@@ -429,7 +429,7 @@ export default function TypingTest() {
                   reset();
                   inputRef.current?.focus();
                 }}
-                className="inline-flex items-center gap-2 rounded-xl bg-violet-500 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-violet-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-300"
+                className="kw-btn kw-btn-primary"
               >
                 <RotateCcw className="h-4 w-4" />
                 Restart
@@ -445,7 +445,7 @@ export default function TypingTest() {
           <VolumeSlider className="sm:mt-6" />
         </div>
 
-        <p className="mt-3 text-center text-[11px] text-zinc-400">
+        <p className="mt-3 text-center text-[11px] text-kw-subtle">
           Click the passage (or just start typing) · Backspace works ·
           ⌘-shortcuts stay untouched
         </p>
