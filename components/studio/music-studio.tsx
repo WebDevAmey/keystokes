@@ -109,7 +109,7 @@ export default function MusicStudio() {
             markers={markers}
             onKeyEvent={handleKeyEvent}
           />
-          <p className="mt-3 text-center text-[11px] text-zinc-600">
+          <p className="mt-3 text-center text-[11px] text-zinc-400">
             {selectedCode
               ? `Selected: ${prettyCode(selectedCode)}${
                   selectedSound ? ` → ${badgeLabel(selectedSound)}` : " · unassigned"
@@ -122,14 +122,14 @@ export default function MusicStudio() {
         <aside className="space-y-4">
           <div className="rounded-2xl border border-white/[0.08] bg-white/[0.025] p-5">
             <p className="text-sm font-medium text-white">Key assignment</p>
-            <p className="mt-1 text-xs text-zinc-500">
+            <p className="mt-1 text-xs text-zinc-400">
               Pick a key, choose a sound, assign it.
             </p>
 
             <div className="mt-4 flex items-center justify-between rounded-xl border border-white/[0.07] bg-black/20 p-3">
               <span className="text-xs text-zinc-400">Selected key</span>
               <span className="text-xs font-medium text-white">
-                {selectedCode ? prettyCode(selectedCode) : "—"}
+                {selectedCode ? prettyCode(selectedCode) : "none yet"}
               </span>
             </div>
 
@@ -205,8 +205,8 @@ export default function MusicStudio() {
             </div>
 
             {mappingEntries.length === 0 ? (
-              <p className="mt-3 rounded-xl border border-dashed border-white/10 p-4 text-center text-[11px] text-zinc-600">
-                No mappings yet — unassigned keys play the switch sample.
+              <p className="mt-3 rounded-xl border border-dashed border-white/10 p-4 text-center text-[11px] text-zinc-400">
+                No mappings yet. Unassigned keys play the switch sample.
               </p>
             ) : (
               <ul className="mt-3 max-h-56 space-y-1 overflow-y-auto">
@@ -226,7 +226,7 @@ export default function MusicStudio() {
                       <span className="text-xs font-medium text-white">
                         {prettyCode(code)}
                       </span>
-                      <span className="truncate text-[11px] text-zinc-500">
+                      <span className="truncate text-[11px] text-zinc-400">
                         {badgeLabel(soundId)}
                       </span>
                     </button>
@@ -234,7 +234,7 @@ export default function MusicStudio() {
                       type="button"
                       aria-label={`Remove mapping for ${prettyCode(code)}`}
                       onClick={() => remove(code)}
-                      className="rounded p-1 text-zinc-600 transition hover:bg-white/5 hover:text-zinc-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400"
+                      className="rounded p-1 text-zinc-400 transition hover:bg-white/5 hover:text-zinc-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400"
                     >
                       <X className="h-3 w-3" />
                     </button>

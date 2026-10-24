@@ -62,9 +62,9 @@ export default function KeyboardSwitcher({
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="text-sm font-medium text-white">{title}</p>
-          <p className="mt-1 text-xs text-zinc-500">
-            Click any key or type on your physical keyboard — browser
-            shortcuts stay untouched.
+          <p className="mt-1 text-xs text-zinc-400">
+            Click any key or type on your physical keyboard. Browser shortcuts
+            like ⌘R and ⌘W are never intercepted.
           </p>
         </div>
 
@@ -112,7 +112,7 @@ export default function KeyboardSwitcher({
         </div>
       </div>
 
-      <p className="mt-3 text-center text-[11px] text-zinc-600">
+      <p className="mt-3 text-center text-[11px] text-zinc-400">
         {playInternalSound
           ? `Sound on · ${Math.round(volume * 100)}% volume · QWERTY`
           : "Muted · QWERTY"}
