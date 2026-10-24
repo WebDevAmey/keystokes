@@ -1,7 +1,9 @@
 import Link from "next/link";
 import SiteHeader from "@/components/site-header";
+import SiteFooter from "@/components/site-footer";
 import AudioStatusPill from "@/components/studio/AudioStatusPill";
-import { Keyboard as KeyboardIcon, Music4, Sparkles } from "lucide-react";
+import KeyboardSwitcher from "@/components/studio/KeyboardSwitcher";
+import { Keyboard as KeyboardIcon, Music4 } from "lucide-react";
 
 const EXPERIENCES = [
   {
@@ -16,7 +18,7 @@ const EXPERIENCES = [
     href: "/studio",
     title: "Sound Studio",
     description:
-      "Map musical notes, percussion, and SoundCN effects onto individual keys — then play your keyboard like an instrument.",
+      "Map musical notes, percussion, and SoundCN effects onto individual keys, then play your keyboard like an instrument.",
     icon: Music4,
     cta: "Open the studio",
   },
@@ -27,13 +29,8 @@ export default function Home() {
     <main className="min-h-screen bg-[#09090b] text-white">
       <SiteHeader right={<AudioStatusPill />} />
 
-      <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20">
+      <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14">
         <div className="max-w-2xl">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-xs text-zinc-400">
-            <Sparkles className="h-3.5 w-3.5 text-violet-300" />
-            Your keyboard, your sound
-          </div>
-
           <h1 className="text-4xl font-semibold tracking-[-0.05em] sm:text-6xl">
             Make every
             <br />
@@ -41,20 +38,26 @@ export default function Home() {
           </h1>
 
           <p className="mt-5 max-w-lg text-sm leading-6 text-zinc-400 sm:text-base">
-            Two ways to play: race the clock in a minimalist typing test, or
-            turn your keyboard into an instrument in the sound studio.
+            Three keyboards that mirror your physical one, real switch samples
+            under every cap. Press a key below, then pick your way to play:
+            a typing test, or a studio that maps notes to keys.
           </p>
         </div>
 
-        <div className="mt-12 grid items-stretch gap-5 md:grid-cols-2">
+        {/* The product, in the first screen: a live keyboard. */}
+        <section aria-label="Live keyboard" className="mt-10">
+          <KeyboardSwitcher />
+        </section>
+
+        <section aria-label="Where to go next" className="mt-14 grid items-stretch gap-5 md:grid-cols-2">
           {EXPERIENCES.map((experience) => (
             <Link
               key={experience.href}
               href={experience.href}
-              className="group flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.025] p-6 transition hover:border-violet-400/30 hover:bg-white/[0.04] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400 sm:p-8"
+              className="group flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.025] p-6 transition hover:border-violet-400/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400 sm:p-8"
             >
               <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-violet-400/20 bg-violet-400/10">
-                <experience.icon className="h-5 w-5 text-violet-300" />
+                <experience.icon className="h-5 w-5 text-violet-300" aria-hidden />
               </div>
               <h2 className="mt-5 text-xl font-semibold tracking-tight">
                 {experience.title}
@@ -67,12 +70,9 @@ export default function Home() {
               </span>
             </Link>
           ))}
-        </div>
+        </section>
 
-        <footer className="mt-16 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.07] pt-5 text-[11px] text-zinc-600">
-          <span>KEYWAVE STUDIO · EARLY BUILD</span>
-          <span>Built for the love of sound.</span>
-        </footer>
+        <SiteFooter />
       </div>
     </main>
   );
