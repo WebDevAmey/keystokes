@@ -129,6 +129,7 @@ export function RegistryMacKeyboard({
   ...props
 }: RegistryMacKeyboardProps) {
   const [activeKeys, setActiveKeys] = React.useState<Set<string>>(new Set());
+  const activeKeysRef = React.useRef<Set<string>>(new Set());
   const onKeyEventRef = React.useRef(onKeyEvent);
   React.useEffect(() => {
     onKeyEventRef.current = onKeyEvent;
@@ -143,12 +144,9 @@ export function RegistryMacKeyboard({
 
   const pressCode = React.useCallback(
     (code: string, source: "physical" | "pointer") => {
-      setActiveKeys((prev) => {
-        if (prev.has(code)) return prev;
-        const next = new Set(prev);
-        next.add(code);
-        return next;
-      });
+      if (activeKeysRef.current.has(code)) return;
+      activeKeysRef.current.add(code);
+      setActiveKeys(new Set(activeKeysRef.current));
       emit(code, "down", source);
     },
     [emit],
@@ -156,12 +154,9 @@ export function RegistryMacKeyboard({
 
   const releaseCode = React.useCallback(
     (code: string, source: "physical" | "pointer") => {
-      setActiveKeys((prev) => {
-        if (!prev.has(code)) return prev;
-        const next = new Set(prev);
-        next.delete(code);
-        return next;
-      });
+      if (!activeKeysRef.current.has(code)) return;
+      activeKeysRef.current.delete(code);
+      setActiveKeys(new Set(activeKeysRef.current));
       emit(code, "up", source);
     },
     [emit],
@@ -230,19 +225,31 @@ export function RegistryMacKeyboard({
     };
 
     const clear = () => {
-      setActiveKeys((prev) => (prev.size === 0 ? prev : new Set()));
+      if (activeKeysRef.current.size === 0) return;
+      const held = Array.from(activeKeysRef.current);
+      activeKeysRef.current = new Set();
+      setActiveKeys(new Set());
+      for (const code of held) {
+        emit(code, "up", "physical");
+      }
+    };
+
+    const handleVisibility = () => {
+      if (document.hidden) clear();
     };
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
     window.addEventListener("blur", clear);
+    document.addEventListener("visibilitychange", handleVisibility);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
       window.removeEventListener("blur", clear);
+      document.removeEventListener("visibilitychange", handleVisibility);
       clear();
     };
-  }, [pressCode, releaseCode, playClick]);
+  }, [pressCode, releaseCode, playClick, emit]);
 
   const contextValue = React.useMemo(
     () => ({ activeKeys, pressCode, releaseCode, markers }),

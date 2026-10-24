@@ -342,8 +342,12 @@ export default function MacKeyboard({
     if (pressedRef.current.size === 0) {
       return;
     }
+    const held = Array.from(pressedRef.current);
     pressedRef.current.clear();
     setPressed(new Set());
+    for (const code of held) {
+      onKeyEventRef.current?.({ code, phase: "up", source: "physical" });
+    }
   }, []);
 
   usePhysicalKeys({
