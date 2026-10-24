@@ -109,7 +109,7 @@ export default function MusicStudio() {
             markers={markers}
             onKeyEvent={handleKeyEvent}
           />
-          <p className="mt-3 text-center text-[11px] text-zinc-400">
+          <p className="mt-3 text-center text-[11px] text-kw-subtle">
             {selectedCode
               ? `Selected: ${prettyCode(selectedCode)}${
                   selectedSound ? ` → ${badgeLabel(selectedSound)}` : " · unassigned"
@@ -120,38 +120,38 @@ export default function MusicStudio() {
 
         {/* Control panel */}
         <aside className="space-y-4">
-          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.025] p-5">
-            <p className="text-sm font-medium text-white">Key assignment</p>
-            <p className="mt-1 text-xs text-zinc-400">
+          <div className="rounded-2xl border border-kw-border bg-white/[0.025] p-5">
+            <p className="text-sm font-medium text-kw-text">Key assignment</p>
+            <p className="mt-1 text-xs text-kw-subtle">
               Pick a key, choose a sound, assign it.
             </p>
 
             <div className="mt-4 flex items-center justify-between rounded-xl border border-white/[0.07] bg-black/20 p-3">
-              <span className="text-xs text-zinc-400">Selected key</span>
-              <span className="text-xs font-medium text-white">
+              <span className="text-xs text-kw-subtle">Selected key</span>
+              <span className="text-xs font-medium text-kw-text">
                 {selectedCode ? prettyCode(selectedCode) : "none yet"}
               </span>
             </div>
 
             <label htmlFor="studio-sound" className="mt-3 block">
-              <span className="text-xs text-zinc-300">Sound</span>
+              <span className="text-xs text-kw-muted">Sound</span>
               <select
                 id="studio-sound"
                 value={draftSound}
                 onChange={(event) => setDraftSound(event.target.value)}
-                className="mt-2 w-full cursor-pointer rounded-xl border border-white/[0.07] bg-black/20 px-3 py-2.5 text-xs text-zinc-200 transition hover:bg-black/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400"
+                className="mt-2 w-full cursor-pointer rounded-xl border border-kw-border bg-transparent px-3 py-2.5 text-xs text-kw-text transition hover:bg-white/[0.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kw-text"
               >
                 {ASSIGNABLE_GROUPS.map((group) => (
                   <optgroup
                     key={group.label}
                     label={group.label}
-                    className="bg-zinc-900"
+                    className="bg-kw-surface"
                   >
                     {group.items.map((item) => (
                       <option
                         key={item.id}
                         value={item.id}
-                        className="bg-zinc-900"
+                        className="bg-kw-surface"
                       >
                         {item.label}
                       </option>
@@ -166,14 +166,14 @@ export default function MusicStudio() {
                 type="button"
                 disabled={!selectedCode}
                 onClick={handleAssign}
-                className="rounded-xl bg-violet-500 px-3 py-2 text-xs font-medium text-white transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-300"
+                className="rounded-xl bg-kw-text px-3 py-2 text-xs font-medium text-kw-bg transition hover:bg-[#e3ded1] disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kw-text"
               >
                 Assign
               </button>
               <button
                 type="button"
                 onClick={handlePreview}
-                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-white/[0.08] px-3 py-2 text-xs text-zinc-300 transition hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400"
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-kw-border px-3 py-2 text-xs text-kw-muted transition hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kw-text"
               >
                 <Play className="h-3 w-3" />
                 Preview
@@ -182,7 +182,7 @@ export default function MusicStudio() {
                 type="button"
                 disabled={!selectedCode || !selectedSound}
                 onClick={() => selectedCode && remove(selectedCode)}
-                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-white/[0.08] px-3 py-2 text-xs text-zinc-300 transition hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400"
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-kw-border px-3 py-2 text-xs text-kw-muted transition hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kw-text"
               >
                 <Eraser className="h-3 w-3" />
                 Remove
@@ -190,14 +190,14 @@ export default function MusicStudio() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.025] p-5">
+          <div className="rounded-2xl border border-kw-border bg-white/[0.025] p-5">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-white">Mappings</p>
+              <p className="text-sm font-medium text-kw-text">Mappings</p>
               <button
                 type="button"
                 disabled={mappingEntries.length === 0}
                 onClick={clearAll}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.08] px-2.5 py-1.5 text-[11px] text-zinc-400 transition hover:bg-white/5 hover:text-zinc-200 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-kw-border px-2.5 py-1.5 text-[11px] text-kw-subtle transition hover:bg-white/5 hover:text-kw-text disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kw-text"
               >
                 <Trash2 className="h-3 w-3" />
                 Clear all
@@ -205,7 +205,7 @@ export default function MusicStudio() {
             </div>
 
             {mappingEntries.length === 0 ? (
-              <p className="mt-3 rounded-xl border border-dashed border-white/10 p-4 text-center text-[11px] text-zinc-400">
+              <p className="mt-3 rounded-xl border border-dashed border-kw-border p-4 text-center text-[11px] text-kw-subtle">
                 No mappings yet. Unassigned keys play the switch sample.
               </p>
             ) : (
@@ -215,18 +215,18 @@ export default function MusicStudio() {
                     key={code}
                     className={cn(
                       "flex items-center justify-between rounded-lg border border-white/[0.06] bg-black/20 px-3 py-2",
-                      selectedCode === code && "border-violet-400/40",
+                      selectedCode === code && "border-kw-text/50",
                     )}
                   >
                     <button
                       type="button"
                       onClick={() => selectKey(code)}
-                      className="flex min-w-0 items-center gap-2 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400"
+                      className="flex min-w-0 items-center gap-2 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kw-text"
                     >
-                      <span className="text-xs font-medium text-white">
+                      <span className="text-xs font-medium text-kw-text">
                         {prettyCode(code)}
                       </span>
-                      <span className="truncate text-[11px] text-zinc-400">
+                      <span className="truncate text-[11px] text-kw-subtle">
                         {badgeLabel(soundId)}
                       </span>
                     </button>
@@ -234,7 +234,7 @@ export default function MusicStudio() {
                       type="button"
                       aria-label={`Remove mapping for ${prettyCode(code)}`}
                       onClick={() => remove(code)}
-                      className="rounded p-1 text-zinc-400 transition hover:bg-white/5 hover:text-zinc-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400"
+                      className="rounded p-1 text-kw-subtle transition hover:bg-white/5 hover:text-kw-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kw-text"
                     >
                       <X className="h-3 w-3" />
                     </button>

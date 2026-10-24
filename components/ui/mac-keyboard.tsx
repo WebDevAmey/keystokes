@@ -217,7 +217,7 @@ function CapButton({
         "bg-[linear-gradient(180deg,#3b3d43_0%,#2c2e34_55%,#212227_100%)]",
         "text-[#f2f2f5] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.55),inset_0_1.5px_0_rgba(255,255,255,0.09),0_1.5px_2.5px_rgba(0,0,0,0.4)]",
         "transition-[transform,box-shadow,filter] duration-75 ease-out",
-        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400",
+        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kw-text",
         compact
           ? "text-[clamp(7px,0.8vw,10px)] font-normal"
           : "text-[clamp(10px,1.1vw,13px)] font-medium",
@@ -231,7 +231,7 @@ function CapButton({
       {marker && (
         <span
           aria-hidden
-          className="absolute bottom-[2px] left-1/2 -translate-x-1/2 rounded-full bg-violet-500/90 px-1 text-[clamp(6px,0.6vw,8px)] font-semibold leading-[1.4] text-white shadow"
+          className="absolute bottom-[2px] left-1/2 -translate-x-1/2 rounded-full bg-black/85 px-1 text-[clamp(6px,0.6vw,8px)] font-semibold leading-[1.4] text-kw-text ring-1 ring-white/25"
         >
           {marker}
         </span>

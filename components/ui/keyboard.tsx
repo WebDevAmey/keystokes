@@ -679,7 +679,7 @@ function Key({
       onPointerLeave={handlePointerRelease}
       onLostPointerCapture={handlePointerRelease}
       style={{ height: 50, width }}
-      className="flex items-end cursor-pointer touch-none appearance-none border-0 bg-transparent p-0 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400"
+      className="flex items-end cursor-pointer touch-none appearance-none border-0 bg-transparent p-0 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kw-text"
     >
       <div
         className={cn(
@@ -709,7 +709,7 @@ function Key({
         {marker && (
           <span
             aria-hidden
-            className="absolute bottom-[3px] left-1/2 z-20 -translate-x-1/2 rounded-full bg-violet-500/90 px-1 text-[7px] font-semibold leading-[12px] text-white shadow"
+            className="absolute bottom-[3px] left-1/2 z-20 -translate-x-1/2 rounded-full bg-black/85 px-1 text-[7px] font-semibold leading-[12px] text-kw-text ring-1 ring-white/25"
           >
             {marker}
           </span>

@@ -10,15 +10,15 @@ const REPO = "https://github.com/WebDevAmey/keystokes";
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-[#09090b] text-white">
+    <div className="min-h-screen bg-kw-bg text-kw-text">
       <SiteHeader />
       <article className="mx-auto max-w-2xl px-5 py-12 sm:px-8">
-        <h1 className="text-3xl font-semibold tracking-tight">Privacy Policy</h1>
-        <p className="mt-2 text-sm text-zinc-400">Last updated: October 2026</p>
+        <h1 className="font-display text-[clamp(2.25rem,5vw,3rem)] font-normal leading-[1.05] tracking-[-0.02em] text-kw-text">Privacy Policy</h1>
+        <p className="mt-2 text-sm text-kw-subtle">Last updated: October 2026</p>
 
-        <div className="mt-8 space-y-8 text-sm leading-6 text-zinc-400">
+        <div className="mt-8 space-y-8 text-sm leading-6 text-kw-muted">
           <section>
-            <h2 className="text-base font-medium text-white">The short version</h2>
+            <h2 className="text-base font-medium text-kw-text">The short version</h2>
             <p className="mt-2">
               Keywave has no accounts, no analytics, no cookies, and no backend.
               Everything it remembers stays in your browser. Your typed text never
@@ -27,19 +27,19 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-medium text-white">What is stored, and where</h2>
+            <h2 className="text-base font-medium text-kw-text">What is stored, and where</h2>
             <p className="mt-2">
               Two values in your browser&apos;s localStorage, both on your device
               only:
             </p>
             <ul className="mt-2 list-disc space-y-1 pl-5">
               <li>
-                <code className="text-zinc-300">keywave.prefs.v1</code>: your chosen
+                <code className="text-kw-muted">keywave.prefs.v1</code>: your chosen
                 keyboard style, sound on/off, volume level, and keystroke sound
                 profile.
               </li>
               <li>
-                <code className="text-zinc-300">keywave.mappings.v1</code>: which
+                <code className="text-kw-muted">keywave.mappings.v1</code>: which
                 sound you assigned to which key in the studio.
               </li>
             </ul>
@@ -49,7 +49,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-medium text-white">What is not collected</h2>
+            <h2 className="text-base font-medium text-kw-text">What is not collected</h2>
             <p className="mt-2">
               No email, no name, no account identifier, no keystroke logs, no
               location, no cookies, no third-party analytics or ads. The typing test
@@ -58,7 +58,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-medium text-white">Third parties</h2>
+            <h2 className="text-base font-medium text-kw-text">Third parties</h2>
             <p className="mt-2">
               The app is static files. Fonts (Geist) are self-hosted with the app, so
               your browser makes no font requests to Google. Sound effects ship with
@@ -69,12 +69,12 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-medium text-white">Contact</h2>
+            <h2 className="text-base font-medium text-kw-text">Contact</h2>
             <p className="mt-2">
               To ask about or delete anything:{" "}
               <a
                 href={`${REPO}/issues`}
-                className="text-violet-300 underline decoration-white/20 underline-offset-2"
+                className="text-kw-text underline decoration-white/20 underline-offset-2"
               >
                 open an issue on GitHub
               </a>

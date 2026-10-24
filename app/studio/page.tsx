@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function StudioPage() {
   return (
-    <div className="min-h-screen bg-[#09090b] text-white">
+    <div className="min-h-screen bg-kw-bg text-kw-text">
       <SiteHeader right={<AudioStatusPill />} />
       <MusicStudio />
       <div className="mx-auto w-full max-w-7xl px-5 pb-8 sm:px-8">

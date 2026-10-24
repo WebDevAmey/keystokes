@@ -546,7 +546,7 @@ export function MacKey({
           // Active state styles - mimicking the active: pseudo-class but triggered by state
           isActive && "translate-y-[1px] shadow-none scale-[0.98]",
           "active:translate-y-[1px] active:shadow-none transition-all duration-100 active:scale-[0.98]",
-          "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400",
+          "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kw-text",
           className
         )}
         {...props}
@@ -582,7 +582,7 @@ export function MacKey({
         {badge && (
           <span
             aria-hidden
-            className="absolute bottom-0.5 left-1/2 z-10 -translate-x-1/2 rounded-full bg-violet-500/90 px-1 text-[7px] font-semibold leading-[10px] text-white shadow"
+            className="absolute bottom-0.5 left-1/2 z-10 -translate-x-1/2 rounded-full bg-black/85 px-1 text-[7px] font-semibold leading-[10px] text-kw-text ring-1 ring-white/25"
           >
             {badge}
           </span>
