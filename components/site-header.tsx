@@ -95,7 +95,7 @@ export default function SiteHeader({ right }: { right?: React.ReactNode }) {
 
         <div className="flex items-center gap-4">
           <span className="hidden lg:flex">{right}</span>
-          <Link href="/studio" className="kw-btn kw-btn-primary hidden px-4 py-2 md:inline-flex">
+          <Link href="/studio" className="kw-btn kw-btn-primary hidden md:inline-flex">
             Open studio
           </Link>
 
